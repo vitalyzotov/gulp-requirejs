@@ -17,7 +17,7 @@ A small, simply, very easy wrapper around the [require.js optimizer](https://git
 </tr>
 <tr>
 <td>Node Version</td>
-<td>>= 0.4</td>
+<td>0.10</td>
 </tr>
 </table>
 
@@ -51,7 +51,7 @@ gulp.task('requirejsBuild', function() {
         },
         // ... more require.js options
     })
-        .pipe(gulp.dest('./delpoy/')); // pipe it to the output DIR
+        .pipe(gulp.dest('./deploy/')); // pipe it to the output DIR
 });
 ```
 
