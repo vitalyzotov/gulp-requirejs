@@ -1,14 +1,15 @@
+var path        = require('path');
+var slash       = require('slash');
 var gutil       = require('gulp-util'),
     requirejs   = require('requirejs'),
     PluginError = gutil.PluginError,
     File        = gutil.File,
-    es          = require('event-stream')
+    through     = require('through2');
 
 // Consts
-const PLUGIN_NAME = 'gulp-requirejs';
+const PLUGIN_NAME = 'gulp-rjs-optimize';
 
-
-module.exports = function(opts) {
+module.exports = function (opts) {
 
     'use strict';
 
@@ -24,33 +25,59 @@ module.exports = function(opts) {
         throw new PluginError(PLUGIN_NAME, 'Pipeing dirs/files is not supported right now, please specify the base path for your script.');
     }
 
-    // create the stream and save the file name (opts.out will be replaced by a callback function later)
-    var _s     = es.pause(),
-        _fName = opts.out;
+    var includes = [];
 
-    // just a small wrapper around the r.js optimizer, we write a new gutil.File (vinyl) to the Stream, mocking a file, which can be handled
-    // regular gulp plugins (i hope...).
-    
-    // try {
-        optimize(opts, function(text) {
-            _s.write(new File({
-                path: _fName,
+    function collectIncludes(file, enc, cb) {
+        if (file.isStream()) {
+            this.emit('error', new PluginError(PLUGIN_NAME, 'Streaming not supported'));
+            cb();
+            return;
+        }
+        var rel      = path.relative(file.base, file.path);
+        var ext      = path.extname(file.path);
+        var basename = path.basename(rel, path.extname(file.path));
+        var dirname  = path.dirname(rel);
+        var item     = slash(path.join(dirname, basename));
+        if (ext === '.html' || ext === '.json') {
+            item = 'text!' + item + ext;
+            includes.unshift(item);
+        } else {
+            includes.push(item);
+        }
+        cb();
+    }
+
+    function endStream(cb) {
+        var that     = this,
+            _fName   = opts.out;
+        opts.include = includes;
+        // just a small wrapper around the r.js optimizer, we write a new gutil.File (vinyl) to the Stream, mocking a file, which can be handled
+        // regular gulp plugins (i hope...).
+        optimize(opts, function (text, sourceMapText) {
+            var bundle = new File({
+                path:     _fName,
                 contents: new Buffer(text)
-            }));
+            });
+            that.push(bundle);
+
+            if (sourceMapText) {
+                var bundleMap = new File({
+                    path:     _fName + '.map',
+                    contents: new Buffer(sourceMapText)
+                });
+                that.push(bundleMap);
+            }
+
+            cb();
         });
-    // } catch (err) {
-    //     _s.emit('error', err);
-    // }
 
-    
+    }
 
-    // return the stream for chain .pipe()ing
-    return _s;
-}
+    return through.obj(collectIncludes, endStream);
+};
 
 // a small wrapper around the r.js optimizer
 function optimize(opts, cb) {
     opts.out = cb;
-    opts.optimize = 'none';
     requirejs.optimize(opts);
 }
