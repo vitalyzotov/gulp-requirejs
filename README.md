@@ -1,7 +1,7 @@
 #gulp-requirejs
 
 [![Dependency Status](https://david-dm.org/vitalyzotov/gulp-requirejs.svg)](https://david-dm.org/vitalyzotov/gulp-requirejs)
-[![Build Status](https://travis-ci.org/vitalyzotov/gulp-requirejs.png?branch=master)](https://travis-ci.org/vitalyzotov/gulp-requirejs)
+[![Build Status](https://travis-ci.org/vitalyzotov/gulp-requirejs.svg?branch=master)](https://travis-ci.org/vitalyzotov/gulp-requirejs)
 
 ## Information
 
