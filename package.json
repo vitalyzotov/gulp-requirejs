@@ -16,14 +16,13 @@
   "keywords": [
   ],
   "dependencies": {
-    "event-stream": "~3.0.20",
-    "gulp-util": "~2.2.5",
-    "requirejs": "2.1.16",
+    "event-stream": "~3.3",
+    "gulp-util": "~3.0",
+    "requirejs": "~2.1.16",
     "slash": "^1.0.0",
-    "through2": "^0.6.3"
+    "through2": "^2.0"
   },
   "devDependencies": {
-    "esprima": "^2.1.0",
     "esprima-ast-equality": "0.0.4",
     "mocha": "*",
     "should": "*"
