@@ -67,7 +67,7 @@ gulp.task('requirejsBuild', function() {
 
 gulp-requirejs-bundle will emit errors when you don't pass an options object and if the `baseUrl` or `out` properties are undefined. 
   
-The requiere.js optimizer itself might also emit errors; unfortunately there's no way of catching them elegantly at the moment. 
+gulp-requirejs-bundle will also emit errors from the require.js optimizer.  
 
 
 ## Options
