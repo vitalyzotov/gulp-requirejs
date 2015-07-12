@@ -21,7 +21,7 @@ function getFixture(filePath) {
 }
 
 function getBufferContent(buffer) {
-    return Buffer.isBuffer(buffer)?buffer.toString('utf8'):buffer;
+    return Buffer.isBuffer(buffer) ? buffer.toString('utf8') : buffer;
 }
 
 describe('gulp-requirejs', function () {
@@ -41,7 +41,7 @@ describe('gulp-requirejs', function () {
 
                 include: ['simple_init'],
 
-                create: true,
+                create:   true,
                 optimize: 'none'
             });
 
@@ -78,7 +78,7 @@ describe('gulp-requirejs', function () {
 
                 include: ['umd_init'],
 
-                create: true,
+                create:   true,
                 optimize: 'none'
             });
 
@@ -104,14 +104,14 @@ describe('gulp-requirejs', function () {
     describe('amd file with shim', function () {
         it('should concat the files in the correct order, and build wrappers for the shimmed files', function (done) {
             var stream = grjs({
-                out: 'complex_init.js',
-                baseUrl: 'test/fixtures/vendor/',
+                out:                    'complex_init.js',
+                baseUrl:                'test/fixtures/vendor/',
                 findNestedDependencies: true,
                 skipPragmas:            true,
-                name: '../complex_init',
-                create: true,
-                optimize: 'none',
-                shim: {
+                name:                   '../complex_init',
+                create:                 true,
+                optimize:               'none',
+                shim:                   {
                     'non_md_file': {
                         exports: 'myLib'
                     }
@@ -187,18 +187,29 @@ describe('gulp-requirejs', function () {
             done();
         });
 
-        // it('should emit an error event when the require.js optimizer finds an error', function(done) {
+        it('should emit an error event when the require.js optimizer finds an error', function (done) {
 
-        //     var stream = grjs({
-        //         baseUrl: 'test/dir',
-        //         out: 'testURL'
-        //     });
+            var stream = grjs({
+                paths:    {
+                    'text': './errtest'
+                },
+                logLevel: 0,
+                wrapShim:                true,
+                useStrict:               true,
+                baseUrl:  'test/dir',
+                name:     'testDir/init',
+                out:      'testURL',
+                preserveLicenseComments: false,
+                generateSourceMaps:      false,
+                optimize:                "none"
+            });
 
-        //     stream.on('error', function(err) {
-        //         done();
-        //     });
+            stream.on('error', function (err) {
+                done();
+            });
 
-        // });
+            stream.end();
+        });
 
     });
 

@@ -53,7 +53,7 @@ module.exports = function (opts) {
         opts.include = includes;
         // just a small wrapper around the r.js optimizer, we write a new gutil.File (vinyl) to the Stream, mocking a file, which can be handled
         // regular gulp plugins (i hope...).
-        optimize(opts, function (text, sourceMapText) {
+        optimize(that, opts, function (text, sourceMapText) {
             var bundle = new File({
                 path:     _fName,
                 contents: new Buffer(text)
@@ -77,7 +77,15 @@ module.exports = function (opts) {
 };
 
 // a small wrapper around the r.js optimizer
-function optimize(opts, cb) {
+function optimize(stream, opts, cb) {
     opts.out = cb;
-    requirejs.optimize(opts);
+    try {
+        requirejs.optimize(opts,
+            function (success) {
+            }, function (err) {
+                stream.emit('error', new PluginError(PLUGIN_NAME, err));
+            });
+    } catch (/** Error */ e) {
+        stream.emit('error', new PluginError(PLUGIN_NAME, e.message));
+    }
 }
