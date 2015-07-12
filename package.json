@@ -1,7 +1,7 @@
 {
   "name": "gulp-requirejs-bundle",
   "description": "Builds projects using require.js's optimizer. Fork of gulp-requirejs.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://github.com/vitalyzotov/gulp-requirejs",
   "repository": "https://github.com/vitalyzotov/gulp-requirejs.git",
   "author": "Robin Thrift <thrift.d.robin@googlemail.com> (http://webbrickworks.com/)",
